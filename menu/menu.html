@@ -79,38 +79,40 @@ body.mode-print .sheet{ left: 10mm; top: 10mm; }
 .mast { position: absolute; left: 0; top: 0; width: 216mm; height: 63mm; color: var(--paper-hi); overflow: hidden; }
 .mast-bg { position: absolute; inset: 0; width: 216mm; height: 63mm; }
 .mast .leaf { position: absolute; transform-origin: 50% 100%; }
-.mast-inner {
-  position: absolute; left: 0; right: 0; top: 9.5mm;
-  display: flex; flex-direction: column; align-items: center; text-align: center;
-}
-.mast .pot { width: 11mm; height: 11mm; color: var(--gold); }
+.brand { position: absolute; left: 16mm; top: 11.5mm; display: flex; flex-direction: column; align-items: flex-start; }
+.brand-top { display: flex; align-items: center; gap: 2.4mm; }
+.brand .pot { width: 10mm; height: 10mm; color: var(--gold); margin-bottom: .8mm; }
 .overline {
-  display: flex; align-items: center; gap: 3mm; margin-top: 1mm;
+  display: flex; align-items: center; gap: 3mm;
   font: 500 8.6pt/1 var(--f-sans); letter-spacing: .62em; text-transform: uppercase; color: var(--gold-soft);
-  padding-left: .62em; /* optically balance trailing tracking */
 }
-.overline::before, .overline::after { content: ""; width: 12mm; height: .3mm; background: var(--gold); opacity: .8; }
-.wordmark {
-  margin-top: 1.6mm;
-  font: 600 49pt/0.95 var(--f-display); letter-spacing: -.012em; color: #FBF4E4;
-}
-.tagline { margin-top: 2.6mm; font: italic 500 14pt/1 var(--f-display); color: var(--gold-soft); letter-spacing: .01em; }
+.overline::after { content: ""; width: 16mm; height: .3mm; background: var(--gold); opacity: .8; }
+.wordmark { margin-top: 2.2mm; font: 600 44pt/0.95 var(--f-display); letter-spacing: -.012em; color: #FBF4E4; }
+.tagline { margin-top: 3mm; font: italic 500 13.6pt/1 var(--f-display); color: var(--gold-soft); letter-spacing: .01em; }
 
-.ta .overline { font-size: 9.4pt; letter-spacing: .04em; padding-left: 0; }
-.ta .wordmark { font-weight: 700; font-size: 40pt; line-height: 1.12; letter-spacing: 0; margin-top: .4mm; }
-.ta .tagline { font-family: "TA Serif", "Fraunces Display", serif; font-style: normal; font-weight: 500; font-size: 12.5pt; margin-top: 1.4mm; }
+.ta .overline { font-size: 9.4pt; letter-spacing: .04em; }
+.ta .wordmark { font-weight: 700; font-size: 34pt; line-height: 1.12; letter-spacing: 0; margin-top: 1mm; }
+.ta .tagline { font-family: "TA Serif", "Fraunces Display", serif; font-style: normal; font-weight: 500; font-size: 12pt; margin-top: 2mm; }
+
+/* round "plate" photos: cream rim, gold hairline, flat vector shadow */
+.pw { position: absolute; }
+.pw .ps { position: absolute; inset: 0; border-radius: 50%; background: #10261A; opacity: .3; transform: translate(.7mm, 1.2mm); }
+.pw .pl { position: absolute; inset: 0; border-radius: 50%; background: #F7F0E0; overflow: hidden; }
+.pw .pl img { position: absolute; inset: var(--rim, 1.6mm); width: calc(100% - 2 * var(--rim, 1.6mm)); height: calc(100% - 2 * var(--rim, 1.6mm)); border-radius: 50%; object-fit: cover; object-position: var(--pos, 50% 50%); display: block; }
+.pw .pr { position: absolute; inset: calc(var(--rim, 1.6mm) - .25mm); border-radius: 50%; border: .3mm solid var(--gold); }
+.pw.hero { left: 140mm; top: 5mm; width: 67mm; height: 67mm; --rim: 2mm; }
 
 /* mango-leaf thoranam hanging from the masthead */
 .thoranam { position: absolute; left: 0; top: 60.5mm; width: 216mm; height: 10mm; }
 
 /* seal */
-.seal { position: absolute; width: 33mm; height: 33mm; right: 15mm; top: 40.5mm; transform: rotate(-9deg); }
+.seal { position: absolute; width: 30mm; height: 30mm; left: 125mm; top: 44mm; transform: rotate(-9deg); }
 
 /* ------------------------------------------------------------------ */
 /*  Content area                                                       */
 /* ------------------------------------------------------------------ */
 .content {
-  position: absolute; left: 13mm; right: 13mm; top: 76.5mm; bottom: 34mm;
+  position: absolute; left: 13mm; right: 13mm; top: 77.5mm; bottom: 31mm;
   display: flex; flex-direction: column; justify-content: space-between;
 }
 
@@ -120,8 +122,8 @@ body.mode-print .sheet{ left: 10mm; top: 10mm; }
 .ta .section-head h2 { font-size: 19pt; font-weight: 700; line-height: 1.25; }
 
 /* the weekly table */
-.week { --day-col: 31mm; --vr-col: 63mm; --row-pad: 2.6mm; display: grid; grid-template-columns: var(--day-col) minmax(0, 1fr) var(--vr-col); }
-.ta .week { --day-col: 30.5mm; --vr-col: 59mm; --row-pad: 1.9mm; }
+.week { --day-col: 31mm; --vr-col: 63mm; --row-pad: 1.85mm; display: grid; grid-template-columns: var(--day-col) minmax(0, 1fr) var(--vr-col); }
+.ta .week { --day-col: 30.5mm; --vr-col: 59mm; --row-pad: 1.55mm; }
 .week .th-left { grid-column: 1 / span 2; display: flex; flex-direction: column; justify-content: space-between; gap: 4mm; border-bottom: .45mm solid var(--leaf-800); }
 .week .th-left .labels { display: grid; grid-template-columns: var(--day-col) 1fr; }
 .week .th {
@@ -138,7 +140,7 @@ body.mode-print .sheet{ left: 10mm; top: 10mm; }
   display: block; margin-top: 1.6mm; text-transform: none; letter-spacing: 0;
   font: italic 400 8pt/1.32 var(--f-text); color: #EFE6CF;
 }
-.ta .week .th.vr .note { font: 400 7.5pt/1.42 var(--f-sans); }
+.ta .week .th.vr .note { font: 400 7.3pt/1.42 var(--f-sans); }
 
 .week .td { padding: var(--row-pad) 0; border-bottom: .25mm dotted var(--rule); display: flex; align-items: center; }
 .week .td.day { font: 600 12.5pt/1 var(--f-display); color: var(--leaf-800); gap: 2.2mm; }
@@ -167,47 +169,48 @@ body.mode-print .sheet{ left: 10mm; top: 10mm; }
 .signoff .rule { width: 22mm; height: 2.4mm; color: var(--gold-deep); }
 .ta .signoff { font: 600 11pt/1.2 var(--f-display); }
 
-/* the two feature cards */
-.cards { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; }
-.card { position: relative; border-radius: 2.6mm; padding: 6.4mm 6.6mm 6mm; min-height: 57mm; }
-.card h3 { font: 600 17.5pt/1.05 var(--f-display); letter-spacing: -.005em; }
-.ta .card h3 { font-size: 12.6pt; font-weight: 700; line-height: 1.3; }
-.card .kicker { font: 600 6.8pt/1.3 var(--f-sans); letter-spacing: .22em; text-transform: uppercase; margin-bottom: 2mm; }
-.ta .card .kicker { font-size: 6.7pt; letter-spacing: 0; font-weight: 500; }
+/* the two feature cards: full width, each with a photo plate */
+.cards { display: flex; flex-direction: column; gap: 4.2mm; }
+.card { position: relative; border-radius: 2.6mm; display: flex; align-items: center; gap: 6mm; padding: 4.4mm 6.6mm; }
+.card .pw { position: relative; flex: none; width: 36mm; height: 36mm; margin: -5mm 0; }
+.card-body { flex: 1; min-width: 0; }
+.card h3 { font: 600 17pt/1.05 var(--f-display); letter-spacing: -.005em; }
+.ta .card h3 { font-size: 13pt; font-weight: 700; line-height: 1.3; }
+.card .kicker { font: 600 6.8pt/1.3 var(--f-sans); letter-spacing: .22em; text-transform: uppercase; margin-bottom: 1.6mm; }
+.ta .card .kicker { font-size: 7.2pt; letter-spacing: 0; font-weight: 500; }
 
-.card.power { background: var(--leaf-800); color: #F6EEDC; overflow: visible; }
+.card.power { background: var(--leaf-800); color: #F6EEDC; }
 .card.power::after { content: ""; position: absolute; inset: 1.7mm; border: .25mm solid rgba(214,164,67,.55); border-radius: 1.6mm; pointer-events: none; }
+.card.power .pw { margin-left: -1mm; }
 .card.power .kicker { color: var(--gold); }
 .card.power h3 { color: #FBF4E4; }
-.card.power ul { list-style: none; display: grid; grid-template-columns: 1fr 1fr; grid-auto-flow: column; grid-template-rows: repeat(3, auto); gap: 2.6mm 4mm; margin-top: 4.6mm; }
-.card.power li { display: flex; gap: 2mm; align-items: flex-start; font: 400 9.4pt/1.32 var(--f-sans); }
-.ta .card.power li { font-size: 8.3pt; line-height: 1.48; }
-.card.power li svg { width: 3mm; height: 3mm; flex: none; margin-top: .55mm; color: var(--gold); }
-.badge { position: absolute; right: -4mm; bottom: -5mm; width: 23mm; height: 23mm; transform: rotate(9deg); }
+.card.power ul { list-style: none; display: flex; flex-wrap: wrap; gap: 1.8mm 5mm; margin-top: 3.2mm; }
+.card.power li { display: flex; gap: 1.6mm; align-items: center; font: 400 9.4pt/1.3 var(--f-sans); white-space: nowrap; }
+.ta .card.power li { font-size: 8.5pt; line-height: 1.45; }
+.card.power li svg { width: 3mm; height: 3mm; flex: none; color: var(--gold); }
+.badge { position: absolute; left: 27.5mm; bottom: -3.5mm; width: 19.5mm; height: 19.5mm; transform: rotate(9deg); z-index: 2; }
 
 .card.conti { background: var(--paper-hi); border: .3mm solid var(--rule); }
-.card.conti .kicker { color: var(--chilli); }
+.card.conti .pw { margin-right: -1mm; }
 .card.conti h3 { color: var(--leaf-800); }
-.card.conti .corner { position: absolute; width: 7mm; height: 7mm; color: var(--gold-deep); }
+.card.conti .corner { position: absolute; width: 6mm; height: 6mm; color: var(--gold-deep); }
 .card.conti .corner.tl { left: 1.6mm; top: 1.6mm; }
-.card.conti .corner.tr { right: 1.6mm; top: 1.6mm; transform: scaleX(-1); }
 .card.conti .corner.bl { left: 1.6mm; bottom: 1.6mm; transform: scaleY(-1); }
-.card.conti .corner.br { right: 1.6mm; bottom: 1.6mm; transform: scale(-1,-1); }
-.conti-list { display: grid; grid-template-columns: 1fr 1fr; gap: 3.6mm 4mm; margin-top: 4.4mm; }
+.conti-list { display: grid; grid-template-columns: minmax(0, 1.45fr) repeat(3, minmax(0, 1fr)); gap: 3mm 4mm; margin-top: 3.4mm; }
 .conti-list .origin { font: 600 6.6pt/1 var(--f-sans); letter-spacing: .24em; text-transform: uppercase; color: var(--gold-deep); display: flex; align-items: center; gap: 1.6mm; }
 .conti-list .origin::before { content: ""; width: 3mm; height: .3mm; background: var(--gold-deep); }
 .ta .conti-list .origin { font-size: 7.4pt; letter-spacing: 0; font-weight: 600; }
-.conti-list .name { font: 600 10.4pt/1.22 var(--f-text); color: var(--leaf-900); margin-top: 1.3mm; }
-.ta .conti-list .name { font-size: 8.9pt; line-height: 1.42; }
+.conti-list .name { font: 600 10.2pt/1.22 var(--f-text); color: var(--leaf-900); margin-top: 1.3mm; }
+.ta .conti-list .name { font-size: 8.8pt; line-height: 1.42; }
 .conti-list .name em { display: block; font: italic 400 8.4pt/1.3 var(--f-text); color: var(--ink-soft); margin-top: .5mm; }
 .ta .conti-list .name em { font: 400 8pt/1.4 var(--f-sans); }
 
 /* ------------------------------------------------------------------ */
 /*  Footer                                                             */
 /* ------------------------------------------------------------------ */
-.foot { position: absolute; left: 0; bottom: 0; width: 216mm; height: 30mm; background: var(--leaf-800); color: #F3EBD6; }
+.foot { position: absolute; left: 0; bottom: 0; width: 216mm; height: 27mm; background: var(--leaf-800); color: #F3EBD6; }
 .foot .edge { position: absolute; left: 0; top: 0; width: 216mm; height: 2.6mm; }
-.foot-inner { position: absolute; left: 13mm; right: 13mm; top: 6mm; display: flex; flex-direction: column; align-items: center; gap: 3mm; }
+.foot-inner { position: absolute; left: 13mm; right: 13mm; top: 5.2mm; display: flex; flex-direction: column; align-items: center; gap: 3mm; }
 .foot .motto { display: flex; align-items: center; gap: 2.6mm; font: italic 500 11.2pt/1 var(--f-display); color: var(--gold-soft); }
 .ta .foot .motto { font: 500 10pt/1.3 var(--f-display); }
 .foot .motto .dot { width: 1.6mm; height: 1.6mm; color: var(--gold); }
@@ -346,7 +349,7 @@ const MENU = {
     seal: "கல்யாண சமையல் சாதம் • தினமும் நிறைவான உணவு •",
     weekly: "வார உணவுப் பட்டியல்",
     thDay: "கிழமை", thLunch: "மதிய உணவு", thVariety: "கலவை சாதப் பட்டியல்",
-    varietyNote: "ஒவ்வொரு கலவை சாதத்துடனும் தயிர் சாதம் / ரசம் சாதம் (150 கிராம்), ஊறுகாய் மற்றும் அப்பளம் வழங்கப்படும்.",
+    varietyNote: "ஒவ்வொரு கலவை சாதத்துடனும் தயிர் சாதம் / ரசம் சாதம் (150 கிராம்), ஊறுகாய், அப்பளம் உண்டு.",
     days: [
       { day: "திங்கள்",  lunch: ["சாதம்","சாம்பார்","ரசம்","பொரியல்","கூட்டு","ஊறுகாய்","மோர்","சப்பாத்தி","குருமா"], rice: "மிளகு சாதம்", qty: "350 கிராம்" },
       { day: "செவ்வாய்", lunch: ["சாதம்","காரக் குழம்பு","ரசம்","உருளைக்கிழங்கு கறி","காய்கறி கூட்டு","ஊறுகாய்","பிரியாணி","ரைத்தா"], rice: "தக்காளி சாதம்", qty: "350 கிராம்" },
@@ -383,9 +386,20 @@ const MENU = {
 };
 
 /* ==================================================================
+   PHOTOS — swap files in photos/ to use your own dishes
+   pos = which part of the photo sits in the middle of the circle
+   ================================================================== */
+const PHOTOS = {
+  hero:  { src: "photos/hero-meals.jpg",   pos: "50% 50%" },
+  power: { src: "photos/power-bowl.jpg",   pos: "50% 50%" },
+  conti: { src: "photos/continental.jpg",  pos: "50% 50%" }
+};
+
+/* ==================================================================
    ARTWORK HELPERS
    ================================================================== */
 const use = (id, cls = "", extra = "") => `<svg class="${cls}" ${extra}><use href="#${id}"/></svg>`;
+const plate = (p, cls = "") => `<div class="pw ${cls}" style="--pos:${p.pos}"><i class="ps"></i><div class="pl"><img src="${p.src}" alt=""></div><i class="pr"></i></div>`;
 
 // banana leaf veins + natural splits, drawn once into the shared symbol
 (function buildBananaVeins() {
@@ -417,8 +431,7 @@ function mastheadArt() {
     <rect width="216" height="63" fill="#1C3A27"/>
     <rect width="216" height="63" fill="url(#kolam)" opacity=".11"/>
   </svg>
-  ${leaf(-9, -8, 128, 70)}${leaf(-13, 24, 101, 56)}${leaf(-9, 67, 63, 44)}
-  ${leaf(225, -8, -128, 70, true)}${leaf(229, 24, -101, 56, true)}
+  ${leaf(173.5, 38.5, -60, 64)}${leaf(173.5, 38.5, -102, 60, true)}${leaf(173.5, 38.5, 24, 62, true)}${leaf(173.5, 38.5, 112, 58)}${leaf(173.5, 38.5, -18, 60)}
   `;
 }
 
@@ -464,8 +477,8 @@ function seal(d) {
 function badge(d) {
   const ta = d.lang === "ta";
   const lines = d.power.badge;
-  const fs = ta ? [3.05, 3.6, 3.6] : [3.3, 4.6, 3.3];
-  const ys = ta ? [16.6, 21.4, 26.0] : [16.4, 21.6, 26.2];
+  const fs = ta ? [3.4, 3.9, 3.9] : [3.3, 4.6, 3.3];
+  const ys = ta ? [16.5, 21.6, 26.4] : [16.4, 21.6, 26.2];
   const fam = ta ? "TA Sans, Jost" : "Jost";
   return `
   <svg class="badge" viewBox="0 0 40 40">
@@ -525,14 +538,14 @@ function renderPage(d) {
     <section class="sheet ${d.lang}" lang="${d.lang}">
       <header class="mast">
         ${mastheadArt()}
-        <div class="mast-inner">
-          ${use("pot", "pot")}
-          <div class="overline">${d.rice}</div>
+        <div class="brand">
+          <div class="brand-top">${use("pot", "pot")}<div class="overline">${d.rice}</div></div>
           <h1 class="wordmark">${d.brand}</h1>
           <div class="tagline">${d.tagline}</div>
         </div>
       </header>
       ${thoranam()}
+      ${plate(PHOTOS.hero, "hero")}
       ${seal(d)}
 
       <main class="content">
@@ -551,15 +564,21 @@ function renderPage(d) {
 
         <div class="cards">
           <div class="card power">
+            ${plate(PHOTOS.power)}
             ${badge(d)}
-            <div class="kicker">${d.power.kicker}</div>
-            <h3>${d.power.title}</h3>
-            <ul>${powerItems}</ul>
+            <div class="card-body">
+              <div class="kicker">${d.power.kicker}</div>
+              <h3>${d.power.title}</h3>
+              <ul>${powerItems}</ul>
+            </div>
           </div>
           <div class="card conti">
-            ${["tl", "tr", "bl", "br"].map(c => use("corner", "corner " + c)).join("")}
-            <h3>${d.conti.title}</h3>
-            <div class="conti-list">${contiItems}</div>
+            ${use("corner", "corner tl")}${use("corner", "corner bl")}
+            <div class="card-body">
+              <h3>${d.conti.title}</h3>
+              <div class="conti-list">${contiItems}</div>
+            </div>
+            ${plate(PHOTOS.conti)}
           </div>
         </div>
       </main>
