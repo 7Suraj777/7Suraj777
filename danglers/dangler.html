@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Stall Danglers</title>
+<style>
+@font-face { font-family: "Fraunces Display"; src: url(../menu/fonts/Fraunces-Display-SemiBold.ttf); font-weight: 600; }
+@font-face { font-family: "Fraunces Display"; src: url(../menu/fonts/Fraunces-Display-Bold.ttf); font-weight: 700; }
+@font-face { font-family: "Fraunces Display"; src: url(../menu/fonts/Fraunces-Display-MediumItalic.ttf); font-weight: 500; font-style: italic; }
+@font-face { font-family: "Fraunces Text"; src: url(../menu/fonts/Fraunces-Text-SemiBold.ttf); font-weight: 600; }
+@font-face { font-family: "Jost"; src: url(../menu/fonts/Jost-Medium.ttf); font-weight: 500; }
+@font-face { font-family: "Jost"; src: url(../menu/fonts/Jost-SemiBold.ttf); font-weight: 600; }
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: #fff; }
+body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+/* sheet = A3 trim (297 x 420) + 3 mm bleed all round */
+.page { position: relative; overflow: hidden; break-after: page; background: #fff; }
+.page:last-child { break-after: auto; }
+body.mode-a3 .page    { width: 297mm; height: 420mm; }
+body.mode-a3 .sheet   { left: -3mm; top: -3mm; }
+body.mode-bleed .page { width: 303mm; height: 426mm; }
+body.mode-bleed .sheet{ left: 0; top: 0; }
+body.mode-print .page { width: 323mm; height: 446mm; }
+body.mode-print .sheet{ left: 10mm; top: 10mm; }
+@media screen { body { background: #777; padding: 10mm 0; } .page { margin: 0 auto 10mm; } }
+
+.sheet { position: absolute; width: 303mm; height: 426mm; overflow: hidden; background: var(--bg); color: var(--fg); }
+/* everything inside .trim uses A3 trim coordinates */
+.trim { position: absolute; left: 3mm; top: 3mm; width: 297mm; height: 420mm; }
+.full { position: absolute; left: -3mm; top: -3mm; width: 303mm; height: 426mm; }
+
+.hole { position: absolute; left: 144.5mm; top: 9mm; width: 8mm; height: 8mm; border-radius: 50%; border: .35mm dashed var(--fg); opacity: .55; }
+.thoranam { position: absolute; left: -3mm; top: 18mm; width: 303mm; height: 14mm; }
+
+.head { position: absolute; left: 14mm; right: 14mm; top: 38mm; display: flex; flex-direction: column; align-items: center; text-align: center; }
+.ornament { width: 60mm; height: 5mm; color: var(--accent); }
+.over { display: flex; align-items: center; gap: 4mm; margin-top: 2mm; font: 600 19pt/1 "Jost", sans-serif; letter-spacing: .55em; padding-left: .55em; text-transform: uppercase; color: var(--accent); }
+.over .pot { width: 13mm; height: 13mm; }
+.title { font: 700 120pt/1 "Fraunces Display", serif; letter-spacing: -.01em; white-space: nowrap; margin-top: 2mm; }
+.sub { margin-top: 3.5mm; font: italic 500 27pt/1.15 "Fraunces Display", serif; color: var(--accent); }
+
+/* plates */
+.pw { position: absolute; }
+.pw .ps { position: absolute; inset: 0; border-radius: 50%; background: #000; opacity: .22; transform: translate(1.6mm, 2.6mm); }
+.pw svg, .pw img { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 50%; }
+.pw img { object-fit: cover; border: 3mm solid #F7F0E0; }
+
+.pill { position: absolute; transform: translate(-50%, 0); white-space: nowrap; background: var(--pill-bg); color: var(--pill-fg); border-radius: 30mm; padding: 2.6mm 7mm 2.8mm; font: 600 21pt/1 "Fraunces Text", serif; box-shadow: 0 0 0 .5mm var(--pill-ring); }
+
+/* price badge */
+.badge { position: absolute; transform: translate(-50%, -50%) rotate(-8deg); border-radius: 50%; background: var(--badge-bg); color: var(--badge-fg); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.badge::before { content: ""; position: absolute; inset: 2.6mm; border-radius: 50%; border: .45mm dashed currentColor; opacity: .55; }
+.badge .amt { font: 700 64pt/1 "Fraunces Display", serif; letter-spacing: -.02em; display: flex; align-items: flex-start; }
+.badge .amt .cur { font-size: .64em; margin: .1em .05em 0 0; }
+.badge .note { font: 600 13pt/1 "Jost", sans-serif; letter-spacing: .14em; text-transform: uppercase; margin-top: 1.4mm; }
+
+/* bottom ribbon */
+.ribbon { position: absolute; left: 50%; transform: translateX(-50%); white-space: nowrap; background: var(--pill-bg); color: var(--pill-fg); padding: 4mm 12mm 4.4mm; border-radius: 2.5mm; font: italic 500 30pt/1.1 "Fraunces Display", serif; box-shadow: 0 0 0 .6mm var(--pill-ring); text-align: center; }
+.ribbon::before, .ribbon::after { content: ""; position: absolute; top: 50%; width: 9mm; height: 9mm; background: var(--pill-bg); transform: translateY(-50%) rotate(45deg); z-index: -1; }
+.ribbon::before { left: -3.4mm; } .ribbon::after { right: -3.4mm; }
+
+/* item list card */
+.items { position: absolute; left: 22mm; right: 22mm; background: var(--pill-bg); color: var(--pill-fg); border-radius: 3mm; padding: 4mm 9mm; box-shadow: 0 0 0 .6mm var(--pill-ring); }
+.items .row { display: flex; align-items: baseline; gap: 4mm; padding: 3mm 0; font: 600 27pt/1.1 "Fraunces Text", serif; }
+.items .row + .row { border-top: .35mm dotted var(--pill-ring); }
+.items .row svg { width: 6mm; height: 6mm; flex: none; align-self: center; color: var(--leafmark); }
+.items .row .dots { flex: 1; border-bottom: .5mm dotted var(--pill-ring); transform: translateY(-1.6mm); }
+.items .row .q { font: 600 18pt/1 "Jost", sans-serif; letter-spacing: .08em; text-transform: uppercase; color: var(--qty); }
+
+.foot { position: absolute; left: -3mm; bottom: -3mm; width: 303mm; height: 19mm; background: var(--foot); }
+.foot svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+/* printer's marks */
+.marks { position: absolute; inset: 0; display: none; }
+body.mode-print .marks { display: block; }
+.marks i { position: absolute; background: #000; }
+.marks .slug { position: absolute; left: 30mm; bottom: 4mm; font: 500 7pt/1 "Jost", sans-serif; color: #000; letter-spacing: .03em; }
+</style>
+<script src="art.js"></script>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <pattern id="kolam" width="12" height="12" patternUnits="userSpaceOnUse">
+    <g fill="none" stroke="currentColor" stroke-width=".3">
+      <circle cx="0" cy="0" r="4.2"/><circle cx="12" cy="0" r="4.2"/><circle cx="0" cy="12" r="4.2"/><circle cx="12" cy="12" r="4.2"/>
+      <path d="M6 2.5 L9.5 6 L6 9.5 L2.5 6 Z"/>
+    </g>
+    <circle cx="6" cy="6" r=".55" fill="currentColor"/>
+  </pattern>
+  <symbol id="pot" viewBox="0 0 48 48">
+    <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M19.2 12.6c-1.7-1.7 1.7-3.3 0-5"/><path d="M24 11.4c-1.9-1.9 1.9-3.8 0-5.7"/><path d="M28.8 12.6c-1.7-1.7 1.7-3.3 0-5"/>
+      <path d="M14.2 21.2c2.1-4.3 5.8-6.2 9.8-6.2s7.7 1.9 9.8 6.2"/><path d="M12.4 21.2h23.2v3H12.4z"/>
+      <path d="M15.2 24.2c-5.2 2.8-7 8.3-5 12.8 1.9 4.2 6.8 6.5 13.8 6.5s11.9-2.3 13.8-6.5c2-4.5.2-10-5-12.8"/>
+      <path d="M10.6 31.6c4.2 1.6 8.7 2.3 13.4 2.3s9.2-.7 13.4-2.3"/>
+    </g>
+  </symbol>
+  <symbol id="flourish" viewBox="0 0 120 10"><g fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"><path d="M4 5h40"/><path d="M76 5h40"/><path d="M44 5c5-5 10-5 13 0s8 5 13 0" /></g><path fill="currentColor" d="M60 1.6 63.4 5 60 8.4 56.6 5z"/><circle cx="2" cy="5" r="1.6" fill="currentColor"/><circle cx="118" cy="5" r="1.6" fill="currentColor"/></symbol>
+  <symbol id="leaf" viewBox="0 0 16 16"><path fill="currentColor" d="M2 14C2 6.8 6.8 2 14 2c0 7.2-4.8 12-12 12z"/><path d="M3.2 12.8 10.6 5.4" stroke="#fff" stroke-opacity=".55" stroke-width="1.1" stroke-linecap="round"/></symbol>
+</defs></svg>
+
+<div id="root"></div>
+
+<script>
+/* ==================================================================
+   DANGLERS — wording as given; prices in ₹
+   art: drawing name from art.js. photo: put a file path here to use a
+   real photo in that plate instead of the drawing.
+   ================================================================== */
+const DANGLERS = [
+  {
+    id: "01_Soya-Oats-Chilla", layout: "hero",
+    colors: { bg: "#E6A53A", fg: "#173322", accent: "#173322", pattern: "#173322", foot: "#173322", badgeBg: "#173322", badgeFg: "#F2CE7E", pillBg: "#FBF4E4", pillFg: "#173322", pillRing: "#C99232", leafA: "#1F4A2E", leafB: "#2E6A3E", bead: "#9C2F1E" },
+    title: "Soya Oats Chilla", price: "150",
+    plates: [{ art: "chilla", photo: null }],
+    ribbon: "with Paneer and Veggies"
+  },
+  {
+    id: "02_Soup", layout: "duo",
+    colors: { bg: "#982E21", fg: "#FBF1DD", accent: "#F1CF86", pattern: "#F1CF86", foot: "#6E1E14", badgeBg: "#F1C467", badgeFg: "#5C1A10", pillBg: "#FBF4E4", pillFg: "#5C1A10", pillRing: "#E1B35A", leafA: "#2B5A36", leafB: "#3E7A48", bead: "#F1C467" },
+    title: "Soup", price: "30",
+    plates: [{ art: "murungai", photo: null, label: "Murungai Soup" }, { art: "mushroom", photo: null, label: "Creamy Mushroom" }]
+  },
+  {
+    id: "03_MITA-Millets", layout: "trio",
+    colors: { bg: "#5B3920", fg: "#FBF1DD", accent: "#E9C27A", pattern: "#E9C27A", foot: "#3E2512", badgeBg: "#E9B95A", badgeFg: "#3E2512", pillBg: "#FBF4E4", pillFg: "#3E2512", pillRing: "#D3A253", leafA: "#3E6B32", leafB: "#5A8A43", bead: "#E9B95A" },
+    title: "MITA Millets", price: "150",
+    plates: [{ art: "thinai", photo: null, label: "Thinai Dosai" }, { art: "pesarettu", photo: null, label: "Pesarettu Dosai" }, { art: "idiyappam", photo: null, label: "Ragi Idiyappam" }]
+  },
+  {
+    id: "04_Momos", layout: "hero",
+    colors: { bg: "#104A4B", fg: "#FBF1DD", accent: "#EFCB80", pattern: "#EFCB80", foot: "#0A3233", badgeBg: "#EFC266", badgeFg: "#0A3233", pillBg: "#FBF4E4", pillFg: "#0A3233", pillRing: "#D9AE5A", leafA: "#2E6A3E", leafB: "#4C8A55", bead: "#EFC266" },
+    title: "Momos", price: "50",
+    plates: [{ art: "momos", photo: null }],
+    ribbon: "5 Pieces"
+  },
+  {
+    id: "05_Rice-Rusika-Rusika", layout: "trio",
+    colors: { bg: "#1C3A27", fg: "#FBF1DD", accent: "#EDCF8C", pattern: "#D6A443", foot: "#122819", badgeBg: "#D6A443", badgeFg: "#142B1C", pillBg: "#FBF4E4", pillFg: "#142B1C", pillRing: "#C99B45", leafA: "#3A6A48", leafB: "#5A8C5E", bead: "#D6A443" },
+    over: "Rice", brand: true, title: "Rusika Rusika", price: "100",
+    plates: [{ art: "bisebela", photo: null, label: "Bisebela Bath" }, { art: "pulao", photo: null, label: "Veg Pulao" }, { art: "tomato", photo: null, label: "Tomato Rice" }],
+    ribbon: "Variety Rice with Curd Rice, Pickle and Papad"
+  },
+  {
+    id: "06_Vegan-Veg", layout: "list",
+    colors: { bg: "#336F2C", fg: "#FBF1DD", accent: "#F2DE96", pattern: "#F2DE96", foot: "#214A1C", badgeBg: "#F2CF6E", badgeFg: "#1D4419", pillBg: "#FBF4E4", pillFg: "#1D4419", pillRing: "#D5B456", leafA: "#1F4A1B", leafB: "#4F8F3E", bead: "#F2CF6E", leafmark: "#4F8F3E", qty: "#8A6A1E" },
+    title: "Vegan Veg", sub: "A Vegan Diet — A Very Healthy Diet", price: "200",
+    plates: [{ art: "vegan", photo: null }],
+    items: [["Veg Chicken Balls", "12 Pieces"], ["Veg Fish Fingers", "8 Pieces"], ["Veg Mutton Balls", "12 Pieces"]]
+  }
+];
+
+/* ==================================================================
+   building blocks
+   ================================================================== */
+const mm = (n) => `${n}mm`;
+
+function plateEl(p, cx, cy, d) {
+  const inner = p.photo ? `<img src="${p.photo}" alt="">` : artSVG(p.art);
+  return `<div class="pw" style="left:${mm(cx - d / 2)};top:${mm(cy - d / 2)};width:${mm(d)};height:${mm(d)}"><i class="ps"></i>${inner}</div>`;
+}
+const pill = (text, cx, top) => `<div class="pill" style="left:${mm(cx)};top:${mm(top)}">${text}</div>`;
+const badge = (d, cx, cy, size) => `<div class="badge" style="left:${mm(cx)};top:${mm(cy)};width:${mm(size)};height:${mm(size)}">
+  <div class="amt" style="font-size:${size * .86}pt"><span class="cur">₹</span>${d.price}</div>${d.priceNote ? `<div class="note">${d.priceNote}</div>` : ""}</div>`;
+
+function thoranam(c) {
+  let s = `<svg class="thoranam" viewBox="0 0 303 14"><path d="M0 3.4 H303" stroke="${c.bead}" stroke-width=".7"/><path d="M0 1.8 H303" stroke="${c.bead}" stroke-width=".25"/>`;
+  const step = 10.1;
+  for (let k = 0, x = 5; x < 303; x += step, k++) {
+    const L = k % 2 ? 7.6 : 10, W = k % 2 ? 2.8 : 3.4, fill = k % 2 ? c.leafB : c.leafA;
+    s += `<path d="M${x} 3.4 C ${x - W} ${3.4 + L * .35} ${x - W * .6} ${3.4 + L * .8} ${x} ${3.4 + L} C ${x + W * .6} ${3.4 + L * .8} ${x + W} ${3.4 + L * .35} ${x} 3.4 Z" fill="${fill}"/>`;
+    s += `<path d="M${x} 4 V${3.4 + L - 1}" stroke="${c.bead}" stroke-opacity=".5" stroke-width=".25"/>`;
+    s += `<circle cx="${x + step / 2}" cy="3.4" r="${k % 2 ? 1.5 : 1.15}" fill="${k % 2 ? "#E58E2E" : c.bead}"/>`;
+  }
+  return s + `</svg>`;
+}
+
+function footBand(c) {
+  let s = `<svg viewBox="0 0 303 19" preserveAspectRatio="none"><rect width="303" height=".8" fill="${c.bead}"/><rect y="1.8" width="303" height=".3" fill="${c.bead}" opacity=".7"/>`;
+  for (let x = 6; x < 303; x += 12) s += `<path d="M${x} 8.6 l2.4 2.4 -2.4 2.4 -2.4 -2.4z" fill="${c.bead}" opacity=".75"/><circle cx="${x + 6}" cy="11" r=".7" fill="${c.bead}" opacity=".75"/>`;
+  return s + `</svg>`;
+}
+
+function cropMarks(d) {
+  const T = 13, W = 297, H = 420, len = 6, off = 3.2;
+  let m = "";
+  for (const x of [T, T + W]) for (const y of [T, T + H]) {
+    m += `<i style="height:.25pt;width:${len}mm;top:${y}mm;left:${x === T ? x - off - len : x + off}mm"></i>`;
+    m += `<i style="width:.25pt;height:${len}mm;left:${x}mm;top:${y === T ? y - off - len : y + off}mm"></i>`;
+  }
+  return m + `<div class="slug">${d.id.replace(/_/g, " · ").replace(/-/g, " ")} · Dangler A3 297 × 420 mm · 3 mm bleed · print both sides · punch hole at top centre</div>`;
+}
+
+/* ==================================================================
+   page layouts (A3 trim coordinates, mm)
+   ================================================================== */
+function body(d) {
+  let s = "";
+  const P = d.plates;
+  if (d.layout === "hero") {
+    s += plateEl(P[0], 148.5, 226, 222);
+    s += badge(d, 238, 306, 76);
+    if (d.ribbon) s += `<div class="ribbon" style="top:350mm">${d.ribbon}</div>`;
+  }
+  if (d.layout === "duo") {
+    s += plateEl(P[0], 79, 205, 134) + plateEl(P[1], 218, 205, 134);
+    s += pill(P[0].label, 79, 265) + pill(P[1].label, 218, 265);
+    s += badge(d, 148.5, 334, 94);
+  }
+  if (d.layout === "trio") {
+    const top = d.ribbon ? 180 : 184, low = d.ribbon ? 290 : 300, size = d.ribbon ? 116 : 124;
+    s += plateEl(P[0], 148.5, top, size) + plateEl(P[1], 82, low, size) + plateEl(P[2], 215, low, size);
+    s += pill(P[0].label, 148.5, top + size / 2 - 7) + pill(P[1].label, 82, low + size / 2 - 7) + pill(P[2].label, 215, low + size / 2 - 7);
+    s += badge(d, 242, top - 14, 70);
+    if (d.ribbon) s += `<div class="ribbon" style="top:365mm;font-size:24pt">${d.ribbon}</div>`;
+  }
+  if (d.layout === "list") {
+    s += plateEl(P[0], 148.5, 196, 178);
+    s += badge(d, 236, 252, 72);
+    s += `<div class="items" style="top:298mm">${d.items.map(([n, q]) => `<div class="row"><svg><use href="#leaf"/></svg><span>${n}</span><i class="dots"></i><span class="q">${q}</span></div>`).join("")}</div>`;
+  }
+  return s;
+}
+
+function page(d) {
+  const c = d.colors;
+  const vars = `--bg:${c.bg};--fg:${c.fg};--accent:${c.accent};--foot:${c.foot};--badge-bg:${c.badgeBg};--badge-fg:${c.badgeFg};--pill-bg:${c.pillBg};--pill-fg:${c.pillFg};--pill-ring:${c.pillRing};--leafmark:${c.leafmark || c.leafB};--qty:${c.qty || c.pillFg}`;
+  const over = d.over ? `<div class="over">${d.brand ? `<svg class="pot"><use href="#pot"/></svg>` : ""}${d.over}</div>` : "";
+  return `<div class="page"><section class="sheet" style="${vars}">
+    <svg class="full" style="color:${c.pattern};opacity:.09"><rect width="100%" height="100%" fill="url(#kolam)"/></svg>
+    <div class="trim">
+      ${thoranam(c)}
+      <div class="head">
+        <svg class="ornament"><use href="#flourish"/></svg>
+        ${over}
+        <h1 class="title">${d.title}</h1>
+        ${d.sub ? `<div class="sub">${d.sub}</div>` : ""}
+      </div>
+      ${body(d)}
+      <div class="foot">${footBand(c)}</div>
+    </div>
+  </section><div class="marks">${cropMarks(d)}</div></div>`;
+}
+
+/* ==================================================================
+   boot: ?mode=a3|bleed|print  &id=<dangler id> or all  &copies=2
+   ================================================================== */
+const q = new URLSearchParams(location.search);
+const mode = ["bleed", "print"].includes(q.get("mode")) ? q.get("mode") : "a3";
+document.body.classList.add("mode-" + mode);
+const size = { a3: "297mm 420mm", bleed: "303mm 426mm", print: "323mm 446mm" }[mode];
+document.head.insertAdjacentHTML("beforeend", `<style>@page { size: ${size}; margin: 0; }</style>`);
+document.body.insertAdjacentHTML("afterbegin", ART_DEFS);
+
+const list = q.get("id") ? DANGLERS.filter((d) => d.id === q.get("id")) : DANGLERS;
+const copies = parseInt(q.get("copies") || "1", 10);
+document.getElementById("root").innerHTML = list.map((d) => Array.from({ length: copies }, () => page(d)).join("")).join("");
+
+// shrink each title until it fits the safe width
+Promise.all([...document.fonts].map((f) => f.load())).then(() => {
+  document.querySelectorAll(".head").forEach((h) => {
+    const t = h.querySelector(".title"), max = h.clientWidth;
+    let fs = 130;
+    t.style.fontSize = fs + "pt";
+    while (t.scrollWidth > max && fs > 40) { fs -= 2; t.style.fontSize = fs + "pt"; }
+  });
+  window.__ready = true;
+});
+</script>
+</body>
+</html>
